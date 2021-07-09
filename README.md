@@ -23,29 +23,29 @@ List of demos (not including [stan.jl demos])
   - [demo2_2: Illustrate the effect of prior in binomial model]
   - [demo2_3: Illustrate simulation based inference]
   - [demo2_4: Illustrate grid and inverse-cdf sampling]
-- [Chapter 3]
+- [Chapter 3](demos_ch3)
   - [demo3_1_4: Normal model with unknown mean and variance (BDA3 section 3.2 on p. 64)]
   - [demo3_5: Estimating the speed of light using normal model BDA3 p. 66]
   - [demo3_6: Binomial regression and grid sampling with bioassay data (BDA3 p. 74-)]
-- [Chapter 4]
+- [Chapter 4](demos_ch4)
   - [demo4_1: Normal approximation for binomial regression model and Bioassay data]
-- [Chapter 5]
+- [Chapter 5](demos_ch5)
   - [demo5_1: Hierarchical model for Rats experiment (BDA3, p. 102)]
   - [demo5_2: Hierarchical model for SAT-example data (BDA3, p. 102)]
-- [Chapter 6]
+- [Chapter 6](demos_ch6)
   - [demo6_1: Posterior predictive checking of normal model for light data]
   - [demo6_2: Posterior predictive checking for independence in binomial trials]
   - [demo6_3: Posterior predictive checking of normal model with poor test statistic]
   - [demo6_4: Marginal posterior predictive checking with PIT test]
 - Chapter 7
   - See [model selection tutorial]
-- [Chapter 10]
+- [Chapter 10](demos_ch10)
   - [demo10_1: Rejection sampling]
   - [demo10_2: Importance sampling]
   - [demo10_3: Importance sampling with normal distribution as a proposal for Bioassay model]
-- [Chapter 11]
+- [Chapter 11](demos_ch11)
   - [demo11_1: Gibbs sampling illustration]
   - [demo11_2: Metropolis sampling + convergence illustration]
   - [demo11_3_4: Metropolis sampling + convergence illustration]
-- [Chapter 12]
+- [Chapter 12](demos_ch12)
   - [demo12_1: Static Hamiltonian Monte Carlo illustration]

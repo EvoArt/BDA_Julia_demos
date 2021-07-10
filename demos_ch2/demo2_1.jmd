@@ -1,7 +1,6 @@
 ---
 title: "Bayesian data analysis demo 2.1"
 author: "Aki Vehtari, Markus Paasiniemi, Arthur Newbury"
-date: "`r format(Sys.Date())`"
 output:
   html_document:
     theme: readable
@@ -16,41 +15,44 @@ uniform prior on $\theta$.
 Statsplots.jl is used for plotting
 to install new packages, type e.g. ] add SatsPlots
 
-```julia setup, message=FALSE, error=FALSE, warning=FALSE
+```julia term = false
 using StatsPlots, Distributions, DataFrames
+pyplot()
 ```
 
 Posterior is Beta(438,544)
 
-```julia
+```julia term = false
 # evenly spaced values can be produced by the syntax start:step:stop
 df1 = DataFrame( θ = 0.375:0.001:0.525)
 a,b = 438,544
 # the pdf function 'knows' when it is supplied a Beta distribution
-df1.p =pdf.(Beta(a,b),df1.θ)
+df1.p =pdf.(Beta(a,b),df1.θ);
 ```
 
 compute also 95% central interval
 
-```julia
+```julia term = false
 # LinRange creates evenly spaced values from 2.5% quantile
 # to 97.5% quantile (i.e., 95% central interval)
 # The '...' notation tells Julia to unpack the output from the quantile function 
 df2 =DataFrame(θ = LinRange(quantile(Beta(a,b),[0.025,0.975])..., 100))# compute the posterior density
-df2.p =pdf.(Beta(a,b),df2.θ)
+df2.p =pdf.(Beta(a,b),df2.θ);
 ```
 
 Plot posterior (Beta(438,544))
 and 48.8% line for population average
 
-```julia
-dpt = plot(df1.θ, df1.p,yticks = false, grid = false,
-yaxis = false, xlab = " θ", linewidth = 4,color = :black,
-label = "Uniform prior -> Posterior is Beta(438,544)")
+```julia 
+plot(df1.θ, df1.p, grid = false,
+yaxis = false,  xlab = " θ", linewidth = 2,color = :black,
+label = "Uniform prior Posterior is Beta(438,544)",
+legend=:outerbottom)
 # Add a layer of colorized 95% posterior interval
-plot!(df2.θ, df2.p, fill =(0, .3,:blue), linealpha = 0,
+plot!(df2.θ, df2.p, fill =(0, .15,:blue), linealpha = 0,
 label = "95% confidence region")
   # Add the proportion of girl babies in general population
-vline!([0.488], linestyle = :dot)
+vline!([0.488], linestyle = :dashdot, color = :black, label = "population average")
 ```
+
 

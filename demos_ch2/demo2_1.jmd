@@ -13,50 +13,44 @@ output:
 posterior distribution of the proportion of girls $\theta$, using
 uniform prior on $\theta$.
 
-ggplot2 is used for plotting
-to install new packages, type e.g. install.packages('ggplot2')
+Statsplots.jl is used for plotting
+to install new packages, type e.g. ] add SatsPlots
 
-```{r setup, message=FALSE, error=FALSE, warning=FALSE}
-library(ggplot2)
-theme_set(theme_minimal())
+```julia setup, message=FALSE, error=FALSE, warning=FALSE
+using StatsPlots, Distributions, DataFrames
 ```
 
 Posterior is Beta(438,544)
 
-```{r }
-# seq creates evenly spaced values
-df1 <- data.frame(theta = seq(0.375, 0.525, 0.001)) 
-a <- 438
-b <- 544
-# dbeta computes the posterior density
-df1$p <- dbeta(df1$theta, a, b)
+```julia
+# evenly spaced values can be produced by the syntax start:step:stop
+df1 = DataFrame( θ = 0.375:0.001:0.525)
+a,b = 438,544
+# the pdf function 'knows' when it is supplied a Beta distribution
+df1.p =pdf.(Beta(a,b),df1.θ)
 ```
 
 compute also 95% central interval
 
-```{r }
-# seq creates evenly spaced values from 2.5% quantile
+```julia
+# LinRange creates evenly spaced values from 2.5% quantile
 # to 97.5% quantile (i.e., 95% central interval)
-# qbeta computes the value for a given quantile given parameters a and b
-df2 <- data.frame(theta = seq(qbeta(0.025, a, b), qbeta(0.975, a, b), length.out = 100))
-# compute the posterior density
-df2$p <- dbeta(df2$theta, a, b)
+# The '...' notation tells Julia to unpack the output from the quantile function 
+df2 =DataFrame(θ = LinRange(quantile(Beta(a,b),[0.025,0.975])..., 100))# compute the posterior density
+df2.p =pdf.(Beta(a,b),df2.θ)
 ```
 
 Plot posterior (Beta(438,544))
 and 48.8% line for population average
 
-```{r }
-ggplot(mapping = aes(theta, p)) +
-  geom_line(data = df1) +
-  # Add a layer of colorized 95% posterior interval
-  geom_area(data = df2, aes(fill='1')) +
+```julia
+dpt = plot(df1.θ, df1.p,yticks = false, grid = false,
+yaxis = false, xlab = " θ", linewidth = 4,color = :black,
+label = "Uniform prior -> Posterior is Beta(438,544)")
+# Add a layer of colorized 95% posterior interval
+plot!(df2.θ, df2.p, fill =(0, .3,:blue), linealpha = 0,
+label = "95% confidence region")
   # Add the proportion of girl babies in general population
-  geom_vline(xintercept = 0.488, linetype='dotted') +
-  # Decorate the plot a little
-  labs(title='Uniform prior -> Posterior is Beta(438,544)', y = '') +
-  scale_y_continuous(expand = c(0, 0.1), breaks = NULL) +
-  scale_fill_manual(values = 'lightblue', labels = '95% posterior interval') +
-  theme(legend.position = 'bottom', legend.title = element_blank())
+vline!([0.488], linestyle = :dot)
 ```
 

@@ -16,8 +16,8 @@ Statsplots.jl is used for plotting
 to install new packages, type e.g. ] add SatsPlots
 
 ```julia term = false
-using StatsPlots, Distributions, DataFrames
-pyplot()
+using CairoMakie, Distributions, DataFrames
+set_theme!(theme_minimal(),Axis = (leftspinevisible = false,yticklabelsvisible=false,),)
 ```
 
 Posterior is Beta(438,544)
@@ -25,9 +25,10 @@ Posterior is Beta(438,544)
 ```julia term = false
 # evenly spaced values can be produced by the syntax start:step:stop
 df1 = DataFrame( θ = 0.375:0.001:0.525)
-a,b = 438,544
+α,β = 438,544
+posterior = Beta(α,β)
 # the pdf function 'knows' when it is supplied a Beta distribution
-df1.p =pdf.(Beta(a,b),df1.θ);
+df1.p =pdf.(posterior,df1.θ);
 ```
 
 compute also 95% central interval
@@ -36,23 +37,26 @@ compute also 95% central interval
 # LinRange creates evenly spaced values from 2.5% quantile
 # to 97.5% quantile (i.e., 95% central interval)
 # The '...' notation tells Julia to unpack the output from the quantile function 
-df2 =DataFrame(θ = LinRange(quantile(Beta(a,b),[0.025,0.975])..., 100))# compute the posterior density
-df2.p =pdf.(Beta(a,b),df2.θ);
+df2 =DataFrame(θ = LinRange(quantile(posterior,[0.025,0.975])..., 100))# compute the posterior density
+df2.p =pdf.(posterior,df2.θ);
 ```
 
 Plot posterior (Beta(438,544))
 and 48.8% line for population average
 
-```julia 
-plot(df1.θ, df1.p, grid = false,
-yaxis = false,  xlab = " θ", linewidth = 2,color = :black,
-label = "Uniform prior Posterior is Beta(438,544)",
-legend=:outerbottom)
+```julia  out_width = "70%"
+fig, ax, post = lines(df1.θ, df1.p, color = :black, linewidth = 4,
+axis = (title = "Posterior distribution given uniform prior",
+titlesize = 24,))
 # Add a layer of colorized 95% posterior interval
-plot!(df2.θ, df2.p, fill =(0, .15,:blue), linealpha = 0,
-label = "95% confidence region")
-  # Add the proportion of girl babies in general population
-vline!([0.488], linestyle = :dashdot, color = :black, label = "population average")
+i95 = band!(df2.θ,fill(0.0,length(df2.p)), df2.p, color = (:blue,0.2))
+# Add the proportion of girl babies in general population
+pop = vlines!(ax, [0.488], color = :black, linestyle=:dash)
+# Decorate the plot a little
+Legend(fig[2,1], [post, i95, pop], ["Poseterior density = Beta($(α),$(β))", 
+"95% posterior interval", "population average"],
+orientation = :horizontal,tellwidth = false, tellheight = true)
+fig  
 ```
 
 
